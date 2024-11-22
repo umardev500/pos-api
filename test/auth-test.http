@@ -1,0 +1,9 @@
+### Login
+POST {{base_url}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin",
+    "email": "admin@com.d"
+}
