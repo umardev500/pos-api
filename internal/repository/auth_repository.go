@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/umardev500/pos-api/internal/contract"
+	"github.com/umardev500/pos-api/internal/model"
 	"github.com/umardev500/pos-api/pkg"
 )
 
@@ -15,17 +16,17 @@ func NewAuthRepository(db *pkg.PGX) contract.AuthRepository {
 	return &authRepository{db: db}
 }
 
-func (a *authRepository) GetUserByUsernameOrEmail(ctx context.Context, username string, email string) (string, error) {
+func (a *authRepository) GetUserByUsernameOrEmail(ctx context.Context, username string) (*model.User, error) {
 	conn := a.db.GetConn(ctx)
 
-	sql := "SELECT password_hash FROM users WHERE username = $1 OR email = $2"
-	row := conn.QueryRow(ctx, sql, username, email)
+	sql := "SELECT id, username, email ,password_hash FROM users WHERE username = $1 OR email = $2"
+	row := conn.QueryRow(ctx, sql, username, username)
 
-	var passwordHash string
-	err := row.Scan(&passwordHash)
+	var user model.User
+	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.PasswordHash)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return passwordHash, nil
+	return &user, nil
 }

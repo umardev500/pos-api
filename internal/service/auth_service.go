@@ -2,7 +2,10 @@ package service
 
 import (
 	"context"
+	"time"
 
+	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/umardev500/pos-api/internal/contract"
 	"github.com/umardev500/pos-api/internal/model"
 	"github.com/umardev500/pos-api/pkg"
@@ -28,7 +31,39 @@ func (a *authService) Login(ctx context.Context, req *model.LoginRequest) pkg.Re
 	}
 
 	// Get user
-	// Generate token
+	user, err := a.repo.GetUserByUsernameOrEmail(ctx, req.Username)
+	if err != nil {
+		return pkg.InternalErrorResponse(err)
+	}
 
-	return pkg.Response{}
+	// Check password
+	if !pkg.CheckPasswordHash(req.Password, user.PasswordHash) {
+		return pkg.Response{
+			StatusCode: fiber.StatusNotFound,
+			Message:    "Username or password is incorrect",
+		}
+	}
+
+	// Generate token
+	jwtClaims := jwt.MapClaims{
+		"exp": time.Now().Add(5 * time.Minute).Unix(),
+		"iat": time.Now().Unix(),
+	}
+
+	token, err := pkg.CreateJWT(jwtClaims, "secret")
+	if err != nil {
+		return pkg.InternalErrorResponse(err)
+	}
+
+	// Return
+	var loginResponse model.LoginResponse = model.LoginResponse{
+		Token: token,
+	}
+
+	return pkg.Response{
+		StatusCode: fiber.StatusOK,
+		Success:    true,
+		Message:    "Login successful",
+		Data:       loginResponse,
+	}
 }

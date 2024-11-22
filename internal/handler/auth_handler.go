@@ -19,10 +19,10 @@ func NewAuthHandler(authService contract.AuthService) contract.AuthHandler {
 func (a *authHandler) Login(c *fiber.Ctx) error {
 	var payload model.LoginRequest
 	if err := c.BodyParser(&payload); err != nil {
-		return err
+		return c.SendStatus(fiber.StatusBadRequest)
 	}
 
 	resp := a.authService.Login(c.Context(), &payload)
 
-	return c.JSON(resp)
+	return c.Status(resp.StatusCode).JSON(resp)
 }

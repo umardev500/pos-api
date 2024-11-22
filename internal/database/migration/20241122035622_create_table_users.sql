@@ -12,13 +12,13 @@ VALUES (
         '00000000-0000-0000-0000-000000000000',
         'username1',
         'username1@example.com',
-        ' $2a$10$fRypLiLtPOrgB2Mvy6Fx5.oZuNwock3V3cVMTAj1wyn.Paam2Oeyu '
+        '$2a$10$fRypLiLtPOrgB2Mvy6Fx5.oZuNwock3V3cVMTAj1wyn.Paam2Oeyu '
     ),
     (
         '00000000-0000-0000-0000-000000000001',
         'username2',
         'username2@example.com',
-        ' $2a$10$fRypLiLtPOrgB2Mvy6Fx5.oZuNwock3V3cVMTAj1wyn.Paam2Oeyu '
+        '$2a$10$fRypLiLtPOrgB2Mvy6Fx5.oZuNwock3V3cVMTAj1wyn.Paam2Oeyu '
     );
 -- +goose Down
 DROP TABLE users;

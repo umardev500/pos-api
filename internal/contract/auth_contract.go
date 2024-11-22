@@ -9,7 +9,7 @@ import (
 )
 
 type AuthRepository interface {
-	GetUserByUsernameOrEmail(ctx context.Context, username string, email string) (string, error)
+	GetUserByUsernameOrEmail(ctx context.Context, username string) (*model.User, error)
 }
 
 type AuthService interface {
