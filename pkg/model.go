@@ -7,11 +7,11 @@ type ErrorDetail struct {
 }
 
 type Response struct {
-	Success bool        `json:"success"`
-	Data    interface{} `json:"data,omitempty"`
-	Message string      `json:"message,omitempty"`
-	Error   ErrorDetail `json:"error,omitempty"`
-	RefCode string      `json:"ref_code,omitempty"`
+	Success bool         `json:"success"`
+	Data    interface{}  `json:"data,omitempty"`
+	Message string       `json:"message,omitempty"`
+	Error   *ErrorDetail `json:"error,omitempty"`
+	RefCode string       `json:"ref_code,omitempty"`
 }
 
 type ValidationErrorMeta struct {

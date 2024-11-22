@@ -5,7 +5,7 @@ func ValidationErrorResponse(fields []ValidationErrorMeta) Response {
 
 	return Response{
 		Message: "Validation errors occurred.",
-		Error: ErrorDetail{
+		Error: &ErrorDetail{
 			Code:    ErrCodeNameValidation,
 			Message: "Validation error",
 			Errors:  fields,
