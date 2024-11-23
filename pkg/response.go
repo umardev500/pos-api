@@ -2,6 +2,18 @@ package pkg
 
 import "github.com/gofiber/fiber/v2"
 
+func NotFoundResponse(msg *string) Response {
+	if msg == nil {
+		defaultMsg := "Resource not found"
+		msg = &defaultMsg
+	}
+
+	return Response{
+		StatusCode: fiber.StatusNotFound,
+		Message:    *msg,
+	}
+}
+
 func ValidationErrorResponse(fields []ValidationErrorMeta) Response {
 	refCode := LogError(ErrValidation)
 
