@@ -9,7 +9,7 @@ import (
 	"github.com/umardev500/pos-api/pkg"
 )
 
-type userContainer struct {
+type authContainer struct {
 	hndlr contract.AuthHandler
 }
 
@@ -18,13 +18,13 @@ func NewAuthContainer(db *pkg.PGX, v pkg.Validator) pkg.Container {
 	authSrv := service.NewAuthService(authRepo, v)
 	authHndlr := handler.NewAuthHandler(authSrv)
 
-	return &userContainer{hndlr: authHndlr}
+	return &authContainer{hndlr: authHndlr}
 }
 
-func (u *userContainer) HandleApi(router fiber.Router) {
+func (a *authContainer) HandleApi(router fiber.Router) {
 	auth := router.Group("/auth")
 
-	auth.Post("/login", u.hndlr.Login)
+	auth.Post("/login", a.hndlr.Login)
 }
 
-func (u *userContainer) HandleWeb(router fiber.Router) {}
+func (a *authContainer) HandleWeb(router fiber.Router) {}
