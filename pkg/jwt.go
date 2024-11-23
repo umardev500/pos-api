@@ -1,6 +1,8 @@
 package pkg
 
 import (
+	"fmt"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -14,13 +16,18 @@ func CreateJWT(claims jwt.MapClaims, secret string) (string, error) {
 	return token, nil
 }
 
-func ValidateJWT(tokenString string, secret string) error {
-	_, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+func ValidateJWT(tokenString string, secret string) (*jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if ok && token.Valid {
+		return &claims, nil
+	}
+
+	return nil, fmt.Errorf("invalid token")
 }
