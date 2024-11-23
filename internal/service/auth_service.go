@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -46,11 +47,14 @@ func (a *authService) Login(ctx context.Context, req *model.LoginRequest) pkg.Re
 
 	// Generate token
 	jwtClaims := jwt.MapClaims{
-		"exp": time.Now().Add(5 * time.Minute).Unix(),
-		"iat": time.Now().Unix(),
+		"user_id": user.ID,
+		"exp":     time.Now().Add(60 * time.Minute).Unix(),
+		"iat":     time.Now().Unix(),
 	}
 
-	token, err := pkg.CreateJWT(jwtClaims, "secret")
+	secret := os.Getenv("JWT_SECRET")
+
+	token, err := pkg.CreateJWT(jwtClaims, secret)
 	if err != nil {
 		return pkg.InternalErrorResponse(err)
 	}
