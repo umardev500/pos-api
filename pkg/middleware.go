@@ -23,9 +23,11 @@ func CheckAuth() fiber.Handler {
 		// Extract the token
 		tokenString := strings.TrimPrefix(bearerToken, bearerPrefix)
 		secret := os.Getenv("JWT_SECRET")
-		if err := ValidateJWT(tokenString, secret); err != nil {
+		claims, err := ValidateJWT(tokenString, secret)
+		if err != nil {
 			return c.SendStatus(fiber.StatusUnauthorized)
 		}
+		c.Locals("user_id", (*claims)["user_id"])
 
 		return c.Next()
 	}
