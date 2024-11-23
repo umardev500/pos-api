@@ -13,3 +13,14 @@ func CreateJWT(claims jwt.MapClaims, secret string) (string, error) {
 
 	return token, nil
 }
+
+func ValidateJWT(tokenString string, secret string) error {
+	_, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		return []byte(secret), nil
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
