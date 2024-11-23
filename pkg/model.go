@@ -9,8 +9,8 @@ type ErrorDetail struct {
 type Response struct {
 	StatusCode int          `json:"-"`
 	Success    bool         `json:"success"`
-	Data       interface{}  `json:"data,omitempty"`
 	Message    string       `json:"message,omitempty"`
+	Data       interface{}  `json:"data,omitempty"`
 	Error      *ErrorDetail `json:"error,omitempty"`
 	RefCode    string       `json:"ref_code,omitempty"`
 }
