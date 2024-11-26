@@ -1,20 +1,16 @@
+// Package pkg contains common models used across the application.
 package pkg
 
+// Error and Validation Models
+
+// ErrorDetail represents details of an error.
 type ErrorDetail struct {
 	Code    string      `json:"code"`
 	Message string      `json:"message"`
 	Errors  interface{} `json:"errors,omitempty"`
 }
 
-type Response struct {
-	StatusCode int          `json:"-"`
-	Success    bool         `json:"success"`
-	Message    string       `json:"message,omitempty"`
-	Data       interface{}  `json:"data,omitempty"`
-	Error      *ErrorDetail `json:"error,omitempty"`
-	RefCode    string       `json:"ref_code,omitempty"`
-}
-
+// ValidationErrorMeta represents metadata for validation errors.
 type ValidationErrorMeta struct {
 	Code    string      `json:"code"`
 	Type    string      `json:"type"`
@@ -24,4 +20,63 @@ type ValidationErrorMeta struct {
 	Exact   int         `json:"exact,omitempty"`
 	Items   interface{} `json:"items,omitempty"`
 	Message string      `json:"message"`
+}
+
+// Pagination and Sorting Models
+
+// PaginationResponseMeta contains metadata for paginated responses.
+type PaginationResponseMeta struct {
+	CurrentPage int64 `json:"current_page"`
+	PerPage     int64 `json:"per_page"`
+	TotalPages  int64 `json:"total_pages"`
+	TotalItems  int64 `json:"total_items"`
+}
+
+// DateRange represents a range of dates.
+type DateRange struct {
+	Start string `json:"start"`
+	End   string `json:"end"`
+}
+
+// Sort defines sorting parameters.
+type Sort struct {
+	SortBy string   `json:"sort_by"`
+	Sort   SortMode `json:"sort"`
+}
+
+// Pagination defines pagination parameters.
+type Pagination struct {
+	Page    int64 `json:"page"`
+	PerPage int64 `json:"per_page"`
+	Offset  int64 `json:"-"`
+}
+
+// Filter and Request Models
+
+// Filter defines a filter with logic and operator.
+type Filter struct {
+	Key      string   `json:"key"`
+	Value    string   `json:"value"`
+	Logic    Logic    `json:"-"` // ignore from user input
+	Operator Operator `json:"-"` // ignore from user input
+}
+
+// FindRequest represents a request for finding resources with filters, pagination, and sorting.
+type FindRequest struct {
+	Filters    []Filter    `json:"filters"`
+	Pagination *Pagination `json:"pagination"`
+	Sort       *Sort       `json:"sort"`
+}
+
+// Response Model
+
+// Response represents a standard API response.
+type Response struct {
+	StatusCode int                     `json:"-"`
+	Success    bool                    `json:"success"`
+	Message    string                  `json:"message,omitempty"`
+	Data       interface{}             `json:"data,omitempty"`
+	Pagination *PaginationResponseMeta `json:"pagination,omitempty"`
+	Error      *ErrorDetail            `json:"error,omitempty"`
+	RefCode    string                  `json:"ref_code,omitempty"`
 }

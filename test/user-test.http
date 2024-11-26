@@ -19,3 +19,11 @@ Authorization: Bearer {{accessToken}}
 ### Get all users
 GET {{base_url}}/user
 Authorization: Bearer {{accessToken}}
+
+### Get all user with pagination
+GET  {{base_url}}/user?page=1&per_page=2
+Authorization: Bearer {{accessToken}}
+
+### Get all user by pagination and sorting
+GET  {{base_url}}/user?page=2&per_page=2&sort_by=username&sort=desc
+Authorization: Bearer {{accessToken}}

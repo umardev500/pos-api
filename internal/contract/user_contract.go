@@ -15,12 +15,12 @@ type UserHandler interface {
 }
 
 type UserService interface {
-	FindAllUsers(ctx context.Context) pkg.Response
+	FindAllUsers(ctx context.Context, params pkg.FindRequest) pkg.Response
 	FindUserByID(ctx context.Context, userID string) pkg.Response
 }
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user *model.User) error
-	FindAllUsers(ctx context.Context) ([]model.User, error)
+	FindAllUsers(ctx context.Context, params pkg.FindRequest) ([]model.User, int64, error)
 	FindUserById(ctx context.Context, id uuid.UUID) (*model.User, error)
 }

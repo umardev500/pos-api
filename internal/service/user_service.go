@@ -22,8 +22,8 @@ func NewUserService(repo contract.UserRepository, v pkg.Validator) contract.User
 	}
 }
 
-func (u *userService) FindAllUsers(ctx context.Context) pkg.Response {
-	users, err := u.repo.FindAllUsers(ctx)
+func (u *userService) FindAllUsers(ctx context.Context, params pkg.FindRequest) pkg.Response {
+	users, total, err := u.repo.FindAllUsers(ctx, params)
 	if err != nil {
 		return pkg.InternalErrorResponse(err)
 	}
@@ -33,6 +33,7 @@ func (u *userService) FindAllUsers(ctx context.Context) pkg.Response {
 		Success:    true,
 		Message:    "Resources found successfully",
 		Data:       users,
+		Pagination: pkg.ParsePaginationInfo(total, params),
 	}
 }
 

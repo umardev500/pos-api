@@ -23,11 +23,18 @@ func (r *userRepository) CreateUser(ctx context.Context, user *model.User) error
 	return err
 }
 
-func (r *userRepository) FindAllUsers(ctx context.Context) ([]model.User, error) {
-	sql := "SELECT id, username, email, created_at FROM users"
-	rows, err := r.db.GetConn(ctx).Query(ctx, sql)
+func (r *userRepository) FindAllUsers(ctx context.Context, params pkg.FindRequest) ([]model.User, int64, error) {
+	pagination := params.Pagination
+
+	sql := `
+	SELECT
+		u.id, u.username, u.email, u.created_at 
+	FROM users u
+	LIMIT $1 OFFSET $2
+	`
+	rows, err := r.db.GetConn(ctx).Query(ctx, sql, pagination.PerPage, pagination.Offset)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	var users []model.User
@@ -35,12 +42,20 @@ func (r *userRepository) FindAllUsers(ctx context.Context) ([]model.User, error)
 		var user model.User
 		err := rows.Scan(&user.ID, &user.Username, &user.Email, &user.CreatedAt)
 		if err != nil {
-			return nil, err
+			return nil, 0, err
 		}
 		users = append(users, user)
 	}
 
-	return users, nil
+	// Count
+	sql = "SELECT COUNT(*) FROM users"
+	var count int64
+	err = r.db.GetConn(ctx).QueryRow(ctx, sql).Scan(&count)
+	if err != nil {
+		return nil, 0, err
+	}
+
+	return users, count, nil
 }
 
 func (r *userRepository) FindUserById(ctx context.Context, id uuid.UUID) (*model.User, error) {

@@ -13,3 +13,9 @@ type User struct {
 	PasswordHash string    `json:"password_hash,omitempty"`
 	CreatedAt    time.Time `json:"created_at"`
 }
+
+var AllowedUserSortFields = map[string]string{
+	"username": "username",
+	"email":    "email",
+	"created":  "created_at",
+}
