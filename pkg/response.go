@@ -2,6 +2,16 @@ package pkg
 
 import "github.com/gofiber/fiber/v2"
 
+func BadRequestResponse(err error) Response {
+	refCode := LogError(err)
+
+	return Response{
+		StatusCode: fiber.StatusBadRequest,
+		Message:    "Bad request.",
+		RefCode:    refCode,
+	}
+}
+
 func NotFoundResponse(msg *string) Response {
 	if msg == nil {
 		defaultMsg := "Resource not found"

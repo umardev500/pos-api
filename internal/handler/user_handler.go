@@ -18,6 +18,14 @@ func NewUserHandler(us contract.UserService) contract.UserHandler {
 	}
 }
 
+func (u *userHandler) HandleGetAllUsers(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	resp := u.userService.FindAllUsers(ctx)
+	return c.Status(resp.StatusCode).JSON(resp)
+}
+
 func (u *userHandler) HandleGetCurrentUser(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

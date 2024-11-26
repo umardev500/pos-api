@@ -28,6 +28,7 @@ func (u *userContainer) HandleApi(router fiber.Router) {
 	user.Use(pkg.CheckAuth())
 
 	user.Get("/me", u.hndlr.HandleGetCurrentUser)
+	user.Get("/", u.hndlr.HandleGetAllUsers)
 }
 
 func (u *userContainer) HandleWeb(router fiber.Router) {}

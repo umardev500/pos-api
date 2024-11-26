@@ -15,3 +15,7 @@ Content-Type: application/json
 ### Get current user
 GET  {{base_url}}/user/me
 Authorization: Bearer {{accessToken}}
+
+### Get all users
+GET {{base_url}}/user
+Authorization: Bearer {{accessToken}}
