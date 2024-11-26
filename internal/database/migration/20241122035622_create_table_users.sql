@@ -1,11 +1,13 @@
 -- +goose Up
 CREATE TABLE users (
     id UUID PRIMARY KEY,
-    username VARCHAR(25) NOT NULL UNIQUE,
-    email VARCHAR(50) NOT NULL UNIQUE,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(250) NOT NULL UNIQUE,
     password_hash TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+-- Create Index
+CREATE INDEX idx_users_username ON users USING GIN(username gin_trgm_ops);
 -- Seed data
 INSERT INTO users (id, username, email, password_hash)
 VALUES (
