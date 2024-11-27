@@ -1,6 +1,8 @@
 // Package pkg contains common models used across the application.
 package pkg
 
+import "time"
+
 // Error and Validation Models
 
 // ErrorDetail represents details of an error.
@@ -79,4 +81,10 @@ type Response struct {
 	Pagination *PaginationResponseMeta `json:"pagination,omitempty"`
 	Error      *ErrorDetail            `json:"error,omitempty"`
 	RefCode    string                  `json:"ref_code,omitempty"`
+}
+
+type TimeModel struct {
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at,omitempty"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
 }

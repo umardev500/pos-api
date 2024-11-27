@@ -1,9 +1,8 @@
 package model
 
 import (
-	"time"
-
 	"github.com/google/uuid"
+	"github.com/umardev500/pos-api/pkg"
 )
 
 type User struct {
@@ -11,7 +10,7 @@ type User struct {
 	Username     string    `json:"username"`
 	Email        string    `json:"email"`
 	PasswordHash string    `json:"password_hash,omitempty"`
-	CreatedAt    time.Time `json:"created_at"`
+	pkg.TimeModel
 }
 
 func (u *User) TableName() string {
