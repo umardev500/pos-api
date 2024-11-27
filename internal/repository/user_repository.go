@@ -24,13 +24,18 @@ func (r *userRepository) CreateUser(ctx context.Context, user *model.User) error
 }
 
 func (r *userRepository) FindAllUsers(ctx context.Context, params pkg.FindRequest) ([]model.User, int64, error) {
-	var users = make([]model.User, 0)
+	pagination := params.Pagination
 
+	conn := r.db.GetConn(ctx)
+	var users = make([]model.User, 0)
 	var count int64 = 100
-	result := r.db.GetDB().Find(&users).Count(&count)
+
+	result := conn.Offset(int(pagination.Offset)).Limit(int(pagination.PerPage)).Find(&users)
 	if result.Error != nil {
 		return nil, 0, result.Error
 	}
+
+	conn.Model(&model.User{}).Count(&count)
 
 	return users, count, nil
 }
