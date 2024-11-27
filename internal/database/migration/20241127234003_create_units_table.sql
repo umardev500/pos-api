@@ -2,7 +2,6 @@
 CREATE TABLE units (
     id UUID PRIMARY KEY,
     "name" VARCHAR(255) NOT NULL UNIQUE,
-    "description" VARCHAR(255),
     multiplier FLOAT NOT NULL
 );
 -- Seed data
