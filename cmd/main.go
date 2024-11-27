@@ -28,9 +28,9 @@ func main() {
 	defer cancel()
 
 	app := setupServer()
-	db := pkg.NewPGX(ctx)
+	gormDB := pkg.NewGormDB()
 	v := pkg.NewValidator()
-	containers := container.NewRegistryContainer(db, v)
+	containers := container.NewRegistryContainer(gormDB, v)
 	pkg.NewRouter(app, containers).Handle()
 	ch := make(chan error, 1)
 	go func() {

@@ -9,23 +9,20 @@ import (
 )
 
 type authRepository struct {
-	db *pkg.PGX
+	db *pkg.GormDB
 }
 
-func NewAuthRepository(db *pkg.PGX) contract.AuthRepository {
+func NewAuthRepository(db *pkg.GormDB) contract.AuthRepository {
 	return &authRepository{db: db}
 }
 
 func (a *authRepository) GetUserByUsernameOrEmail(ctx context.Context, username string) (*model.User, error) {
 	conn := a.db.GetConn(ctx)
 
-	sql := "SELECT id, username, email ,password_hash FROM users WHERE username = $1 OR email = $2"
-	row := conn.QueryRow(ctx, sql, username, username)
-
 	var user model.User
-	err := row.Scan(&user.ID, &user.Username, &user.Email, &user.PasswordHash)
-	if err != nil {
-		return nil, err
+	result := conn.Where("username = ?", username).Or("email = ?", username).Find(&user)
+	if result.Error != nil {
+		return nil, result.Error
 	}
 
 	return &user, nil

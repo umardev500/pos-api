@@ -13,7 +13,7 @@ type userContainer struct {
 	hndlr contract.UserHandler
 }
 
-func NewUserContainer(db *pkg.PGX, v pkg.Validator) pkg.Container {
+func NewUserContainer(db *pkg.GormDB, v pkg.Validator) pkg.Container {
 	userRepo := repository.NewUserRepository(db)
 	userService := service.NewUserService(userRepo, v)
 	handlr := handler.NewUserHandler(userService)

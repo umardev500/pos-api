@@ -13,7 +13,7 @@ type authContainer struct {
 	hndlr contract.AuthHandler
 }
 
-func NewAuthContainer(db *pkg.PGX, v pkg.Validator) pkg.Container {
+func NewAuthContainer(db *pkg.GormDB, v pkg.Validator) pkg.Container {
 	authRepo := repository.NewAuthRepository(db)
 	authSrv := service.NewAuthService(authRepo, v)
 	authHndlr := handler.NewAuthHandler(authSrv)

@@ -14,6 +14,10 @@ type User struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 
+func (u *User) TableName() string {
+	return "users"
+}
+
 var AllowedUserSortFields = map[string]string{
 	"username": "username",
 	"email":    "email",
