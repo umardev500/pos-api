@@ -28,7 +28,7 @@ func (r *userRepository) FindAllUsers(ctx context.Context, params pkg.FindReques
 
 	conn := r.db.GetConn(ctx)
 	var users = make([]model.User, 0)
-	var count int64 = 100
+	var count int64 = 0
 
 	result := conn.Offset(int(pagination.Offset)).Limit(int(pagination.PerPage)).Find(&users)
 	if result.Error != nil {
