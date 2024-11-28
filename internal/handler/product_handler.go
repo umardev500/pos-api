@@ -1,0 +1,34 @@
+package handler
+
+import (
+	"context"
+	"time"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/umardev500/pos-api/internal/contract"
+	"github.com/umardev500/pos-api/pkg"
+)
+
+type productHandler struct {
+	service contract.ProductService
+}
+
+func NewProductHandler(service contract.ProductService) contract.ProductHandler {
+	return &productHandler{service: service}
+}
+
+func (ph *productHandler) HandleGetAllProducts(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	pagination := pkg.GetPaginationParams(c)
+	sort := pkg.GetSortParams(c)
+
+	params := pkg.FindRequest{
+		Pagination: &pagination,
+		Sort:       &sort,
+	}
+
+	resp := ph.service.FindAllProducts(ctx, params)
+	return c.Status(resp.StatusCode).JSON(resp)
+}

@@ -1,0 +1,17 @@
+### Login
+# @name login
+POST {{base_url}}/auth/login
+Content-Type: application/json
+
+{
+    "username": "username1",
+    "password": "loremipsum"
+}
+
+
+### Variables
+@accessToken = {{login.response.body.data.token}}
+
+### Find all products
+GET {{base_url}}/products
+Authorization: Bearer {{accessToken}}

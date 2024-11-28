@@ -1,6 +1,12 @@
 package model
 
-import "github.com/umardev500/pos-api/pkg"
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
+
+	"github.com/umardev500/pos-api/pkg"
+)
 
 type ProductPrice struct {
 	Name  string  `json:"name"`
@@ -17,10 +23,42 @@ type ProductPricing struct {
 	Prices []ProductPrice `json:"prices"`
 }
 
+type productPricingList []ProductPricing
+
+func (p *productPricingList) Value() (driver.Value, error) {
+	data, err := json.Marshal(p)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (p *productPricingList) Scan(value interface{}) error {
+	if value == nil {
+		return nil
+	}
+
+	bytes, ok := value.([]byte)
+	if !ok {
+		return fmt.Errorf("failed to unmarshal JSON value")
+	}
+
+	fmt.Println(string(value.([]byte)))
+
+	err := json.Unmarshal(bytes, &p)
+	fmt.Println(err)
+
+	return err
+}
+
 type Product struct {
-	ID          string           `json:"id"`
-	Name        string           `json:"name"`
-	Description string           `json:"description"`
-	Pricing     []ProductPricing `json:"pricing"`
+	ID          string             `json:"id"`
+	Name        string             `json:"name"`
+	Description string             `json:"description"`
+	Pricing     productPricingList `json:"pricing" gorm:"type:jsonb"`
 	pkg.TimeModel
+}
+
+func (p *Product) TableName() string {
+	return "products"
 }

@@ -16,8 +16,7 @@ VALUES
     '00000000-0000-0000-0000-000000000000',  -- UUID for product
     'Eggs',  -- Product name
     'Fresh farm eggs',  -- Product description
-    '{
-      "pricing": [
+    '[
         {
           "unit": {
             "name": "dozen",
@@ -67,7 +66,7 @@ VALUES
           ]
         }
       ]
-    }'::jsonb  -- JSONB format for pricing
+'::jsonb  -- JSONB format for pricing
   );
 -- +goose Down
 DROP TABLE products;
