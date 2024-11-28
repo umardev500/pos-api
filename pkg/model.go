@@ -68,6 +68,7 @@ type FindRequest struct {
 	Filters    []Filter    `json:"filters"`
 	Pagination *Pagination `json:"pagination"`
 	Sort       *Sort       `json:"sort"`
+	Search     *string     `json:"search"`
 }
 
 // Response Model
