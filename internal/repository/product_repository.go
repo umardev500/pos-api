@@ -22,7 +22,12 @@ func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.Find
 	var products = make([]model.Product, 0)
 	var count int64 = 0
 
-	result := conn.Offset(int(pagination.Offset)).Limit(int(pagination.PerPage)).Find(&products)
+	result := conn.Offset(int(pagination.Offset)).Limit(int(pagination.PerPage))
+	if params.Search != nil {
+		result = result.Where("name ILIKE ?", *params.Search)
+	}
+
+	result.Find(&products)
 	if result.Error != nil {
 		return nil, 0, result.Error
 	}

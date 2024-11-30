@@ -43,12 +43,7 @@ func (p *productPricingList) Scan(value interface{}) error {
 		return fmt.Errorf("failed to unmarshal JSON value")
 	}
 
-	fmt.Println(string(value.([]byte)))
-
-	err := json.Unmarshal(bytes, &p)
-	fmt.Println(err)
-
-	return err
+	return json.Unmarshal(bytes, &p)
 }
 
 type Product struct {

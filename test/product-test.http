@@ -15,3 +15,7 @@ Content-Type: application/json
 ### Find all products
 GET {{base_url}}/products
 Authorization: Bearer {{accessToken}}
+
+### Find all products with search
+GET {{base_url}}/products?search=egg
+Authorization: Bearer {{accessToken}}

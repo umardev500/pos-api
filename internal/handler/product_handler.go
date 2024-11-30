@@ -23,10 +23,12 @@ func (ph *productHandler) HandleGetAllProducts(c *fiber.Ctx) error {
 
 	pagination := pkg.GetPaginationParams(c)
 	sort := pkg.GetSortParams(c)
+	s := c.Query("search")
 
 	params := pkg.FindRequest{
 		Pagination: &pagination,
 		Sort:       &sort,
+		Search:     &s,
 	}
 
 	resp := ph.service.FindAllProducts(ctx, params)
