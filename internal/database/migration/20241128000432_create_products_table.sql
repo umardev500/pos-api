@@ -9,6 +9,9 @@ CREATE TABLE products (
     deleted_at TIMESTAMP NULL DEFAULT NULL
 );
 
+-- Create Index
+CREATE INDEX idx_products_name ON products USING GIN("name" gin_trgm_ops);
+
 -- Seed data with improved unit naming
 INSERT INTO products (id, "name", "description", pricing)
 VALUES
