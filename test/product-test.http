@@ -36,6 +36,10 @@ Authorization: Bearer {{accessToken}}
 GET {{base_url}}/products?max_price=10
 Authorization: Bearer {{accessToken}}
 
+### Find product with min and max price filter only
+GET {{base_url}}/products?min_price=160&max_price=16
+Authorization: Bearer {{accessToken}}
+
 ### Find products with combined filters
 GET {{base_url}}/products?search=eggs&status=low_stock&category=Fruits&min_price=10&max_price=10
 Authorization: Bearer {{accessToken}}

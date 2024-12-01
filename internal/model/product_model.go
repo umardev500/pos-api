@@ -112,3 +112,20 @@ type ProductFilter struct {
 	MinPrice *float64       `json:"min_price"`
 	MaxPrice *float64       `json:"max_price"`
 }
+
+func (p *ProductFilter) Validate() error {
+	// Validate status
+	if err := p.Status.Validate(); err != nil {
+		return err
+	}
+
+	// Validate price range
+	// validate min must be less than max and max must be greater than min
+	if p.MinPrice != nil && p.MaxPrice != nil {
+		if *p.MinPrice > *p.MaxPrice || *p.MaxPrice < *p.MinPrice {
+			return fmt.Errorf("invalid price range")
+		}
+	}
+
+	return nil
+}

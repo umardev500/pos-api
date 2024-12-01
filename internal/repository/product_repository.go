@@ -36,6 +36,13 @@ func (p *productRepository) queryByCategory(db *gorm.DB, catName string) {
 	db.Where("categories.name = ?", catName)
 }
 
+func (p *productRepository) queryWithMinAndMaxPrice(db *gorm.DB, minPrice float64, maxPrice float64) {
+	db.Joins("JOIN product_pricings pp ON pp.product_id = products.id").
+		Where("pp.price >= ? AND pp.price <= ?", minPrice, maxPrice).
+		// Select distinct to prevent duplicate results
+		Distinct("products.id", "products.name", "products.description", "products.created_at", "products.updated_at", "products.deleted_at", "categories.name as category_name")
+}
+
 func (p *productRepository) queryByMinPrice(db *gorm.DB, minPrice float64) {
 	db.Joins("JOIN product_pricings pp ON pp.product_id = products.id").
 		Where("pp.price >= ?", minPrice).
@@ -68,14 +75,21 @@ func (p *productRepository) parseFilter(filters *model.ProductFilter, result *go
 		p.queryByCategory(result, *filters.Category)
 	}
 
-	// Filter by min price
-	if filters.MinPrice != nil && *filters.MinPrice > 0 {
-		p.queryByMinPrice(result, *filters.MinPrice)
-	}
+	// Filter by min and max price
+	isMinAndMaxPriceSet := filters.MinPrice != nil && *filters.MinPrice > 0 && filters.MaxPrice != nil && *filters.MaxPrice > 0
+	if isMinAndMaxPriceSet {
+		p.queryWithMinAndMaxPrice(result, *filters.MinPrice, *filters.MaxPrice)
+	} else {
 
-	// Filter by max price
-	if filters.MaxPrice != nil && *filters.MaxPrice > 0 {
-		p.queryByMaxPrice(result, *filters.MaxPrice)
+		// Filter by min price
+		if filters.MinPrice != nil && *filters.MinPrice > 0 {
+			p.queryByMinPrice(result, *filters.MinPrice)
+		}
+
+		// Filter by max price
+		if filters.MaxPrice != nil && *filters.MaxPrice > 0 {
+			p.queryByMaxPrice(result, *filters.MaxPrice)
+		}
 	}
 }
 
