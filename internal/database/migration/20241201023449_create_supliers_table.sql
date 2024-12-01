@@ -1,4 +1,4 @@
--- +goose U
+-- +goose Up
 CREATE TABLE IF NOT EXISTS suppliers (
     id UUID PRIMARY KEY,
     "name" VARCHAR(255) NOT NULL UNIQUE,

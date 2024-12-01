@@ -31,7 +31,7 @@ func (ph *productHandler) HandleGetAllProducts(c *fiber.Ctx) error {
 	maxPrice := c.QueryFloat("max_price", 0)
 
 	filters := model.ProductFilter{
-		Status:   model.ProductStatus(status),
+		Status:   (*model.ProductStatus)(&status),
 		Category: &category,
 		MinPrice: &minPrice,
 		MaxPrice: &maxPrice,

@@ -17,5 +17,5 @@ GET {{base_url}}/products
 Authorization: Bearer {{accessToken}}
 
 ### Find all products with search
-GET {{base_url}}/products?search=eggs
+GET {{base_url}}/products?search=eggs&status=in_stock
 Authorization: Bearer {{accessToken}}

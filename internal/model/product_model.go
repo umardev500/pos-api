@@ -106,8 +106,8 @@ func (p ProductStatus) Validate() error {
 }
 
 type ProductFilter struct {
-	Status   ProductStatus `json:"status"`
-	Category *string       `json:"category"`
-	MinPrice *float64      `json:"min_price"`
-	MaxPrice *float64      `json:"max_price"`
+	Status   *ProductStatus `json:"status"`
+	Category *string        `json:"category"`
+	MinPrice *float64       `json:"min_price"`
+	MaxPrice *float64       `json:"max_price"`
 }
