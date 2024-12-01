@@ -16,6 +16,26 @@ Content-Type: application/json
 GET {{base_url}}/products
 Authorization: Bearer {{accessToken}}
 
-### Find all products with search
-GET {{base_url}}/products?search=eggs&status=in_stock
+### Find products with search filter only
+GET {{base_url}}/products?search=eggs
+Authorization: Bearer {{accessToken}}
+
+### Find products with status filter only
+GET {{base_url}}/products?status=in_stock
+Authorization: Bearer {{accessToken}}
+
+### Find products with category filter only
+GET {{base_url}}/products?category=Fruits
+Authorization: Bearer {{accessToken}}
+
+### Find products with min price filter only
+GET {{base_url}}/products?min_price=10
+Authorization: Bearer {{accessToken}}
+
+### Find products with max price filter only
+GET {{base_url}}/products?max_price=10
+Authorization: Bearer {{accessToken}}
+
+### Find products with combined filters
+GET {{base_url}}/products?search=eggs&status=low_stock&category=Fruits&min_price=10&max_price=10
 Authorization: Bearer {{accessToken}}

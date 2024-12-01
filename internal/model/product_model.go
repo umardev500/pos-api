@@ -70,6 +70,7 @@ func (p *ProductStock) TableName() string {
 type Product struct {
 	ID          string           `json:"id" gorm:"column:id"`
 	Name        string           `json:"name" gorm:"column:name"`
+	Category    *string          `json:"category" gorm:"column:category_name"`
 	Description string           `json:"description" gorm:"column:description"`
 	Pricings    []ProductPricing `json:"pricings" gorm:"foreignKey:product_id"`
 	Stock       *ProductStock    `json:"stock" gorm:"foreignKey:product_id"`
