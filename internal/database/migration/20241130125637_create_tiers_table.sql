@@ -7,5 +7,10 @@ CREATE TABLE tiers (
     deleted_at TIMESTAMP NULL DEFAULT NULL
 );
 
+-- Seed data
+INSERT INTO tiers (id, "name")
+VALUES ('00000000-0000-0000-0000-000000000000', 'Regular'),
+    ('00000000-0000-0000-0000-000000000001', 'Wholesale');
+
 -- +goose Down
 DROP TABLE tiers;
