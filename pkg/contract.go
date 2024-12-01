@@ -24,3 +24,7 @@ type Validator interface {
 type Validation interface {
 	Message() string
 }
+
+type Filter interface {
+	Validate(value interface{}) error
+}
