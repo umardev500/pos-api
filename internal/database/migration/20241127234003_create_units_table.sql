@@ -2,7 +2,10 @@
 CREATE TABLE units (
     id UUID PRIMARY KEY,
     "name" VARCHAR(255) NOT NULL UNIQUE,
-    multiplier FLOAT NOT NULL
+    multiplier FLOAT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NULL DEFAULT NULL,
+    deleted_at TIMESTAMPTZ NULL DEFAULT NULL
 );
 -- Seed data
 INSERT INTO units (id, "name", multiplier)
