@@ -25,7 +25,8 @@ func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.Find
 	result := conn.Offset(int(pagination.Offset)).Limit(int(pagination.PerPage)).
 		Preload("Pricings").
 		Preload("Pricings.Unit").
-		Preload("Pricings.CustomUnit")
+		Preload("Pricings.CustomUnit").
+		Preload("Stock")
 
 	if params.Search != nil {
 		result = result.Where("name ILIKE ?", "%"+*params.Search+"%")

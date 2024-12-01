@@ -51,12 +51,26 @@ func (p *ProductPricing) TableName() string {
 	return "product_pricings"
 }
 
+// ProductStock represents the stock details for a product.
+type ProductStock struct {
+	ID        string `json:"id" gorm:"column:id"`
+	ProductID string `json:"-" gorm:"column:product_id"`
+	Quantity  int    `json:"quantity" gorm:"column:quantity"`
+	pkg.TimeModel
+}
+
+// TableName sets the insert table name for this struct type.
+func (p *ProductStock) TableName() string {
+	return "product_stocks"
+}
+
 // Product represents a product with its details and pricing.
 type Product struct {
 	ID          string           `json:"id" gorm:"column:id"`
 	Name        string           `json:"name" gorm:"column:name"`
 	Description string           `json:"description" gorm:"column:description"`
 	Pricings    []ProductPricing `json:"pricings" gorm:"foreignKey:product_id"`
+	Stock       *ProductStock    `json:"stock" gorm:"foreignKey:product_id"`
 	pkg.TimeModel
 }
 
