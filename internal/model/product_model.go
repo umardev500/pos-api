@@ -121,7 +121,7 @@ func (p *ProductFilter) Validate() error {
 
 	// Validate price range
 	// validate min must be less than max and max must be greater than min
-	if p.MinPrice != nil && p.MaxPrice != nil {
+	if (p.MinPrice != nil && *p.MinPrice > 0) && (p.MaxPrice != nil && *p.MaxPrice > 0) {
 		if *p.MinPrice > *p.MaxPrice || *p.MaxPrice < *p.MinPrice {
 			return fmt.Errorf("invalid price range")
 		}
