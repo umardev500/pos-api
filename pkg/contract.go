@@ -26,5 +26,5 @@ type Validation interface {
 }
 
 type Filter interface {
-	Validate(value interface{}) error
+	Validate() error
 }

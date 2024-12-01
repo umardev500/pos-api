@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+
 	"github.com/umardev500/pos-api/pkg"
 )
 
@@ -77,4 +79,35 @@ type Product struct {
 // TableName sets the insert table name for this struct type.
 func (p *Product) TableName() string {
 	return "products"
+}
+
+type ProductStatus string
+
+const (
+	ProductStatusLowStock ProductStatus = "low_stock"
+	ProductStatusInStock  ProductStatus = "in_stock"
+	ProductStatusOutStock ProductStatus = "out_stock"
+)
+
+func (p ProductStatus) Validate() error {
+	// Check if the product status is empty
+	// If it is empty, return nil
+	if p == "" {
+		return nil
+	}
+
+	// Check if the product status is valid
+	switch p {
+	case ProductStatusLowStock, ProductStatusInStock, ProductStatusOutStock:
+		return nil
+	default:
+		return fmt.Errorf("invalid product status: %s", p)
+	}
+}
+
+type ProductFilter struct {
+	Status   ProductStatus `json:"status"`
+	Category *string       `json:"category"`
+	MinPrice *float64      `json:"min_price"`
+	MaxPrice *float64      `json:"max_price"`
 }

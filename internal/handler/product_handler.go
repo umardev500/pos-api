@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/umardev500/pos-api/internal/contract"
+	"github.com/umardev500/pos-api/internal/model"
 	"github.com/umardev500/pos-api/pkg"
 )
 
@@ -24,8 +25,20 @@ func (ph *productHandler) HandleGetAllProducts(c *fiber.Ctx) error {
 	pagination := pkg.GetPaginationParams(c)
 	sort := pkg.GetSortParams(c)
 	s := c.Query("search")
+	status := c.Query("status")
+	category := c.Query("category")
+	minPrice := c.QueryFloat("min_price", 0)
+	maxPrice := c.QueryFloat("max_price", 0)
+
+	filters := model.ProductFilter{
+		Status:   model.ProductStatus(status),
+		Category: &category,
+		MinPrice: &minPrice,
+		MaxPrice: &maxPrice,
+	}
 
 	params := pkg.FindRequest{
+		Filters:    &filters,
 		Pagination: &pagination,
 		Sort:       &sort,
 		Search:     &s,

@@ -53,19 +53,9 @@ type Pagination struct {
 	Offset  int64 `json:"-"`
 }
 
-// Filter and Request Models
-
-// Filter defines a filter with logic and operator.
-type Filter struct {
-	Key      string   `json:"key"`
-	Value    string   `json:"value"`
-	Logic    Logic    `json:"-"` // ignore from user input
-	Operator Operator `json:"-"` // ignore from user input
-}
-
 // FindRequest represents a request for finding resources with filters, pagination, and sorting.
 type FindRequest struct {
-	Filters    []Filter    `json:"filters"`
+	Filters    interface{} `json:"filters"`
 	Pagination *Pagination `json:"pagination"`
 	Sort       *Sort       `json:"sort"`
 	Search     *string     `json:"search"`
