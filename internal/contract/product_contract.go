@@ -22,7 +22,7 @@ type ProductService interface {
 }
 
 type ProductRepository interface {
-	SoftDeleteProducts(ctx context.Context, id []uuid.UUID) error
+	SoftDeleteProducts(ctx context.Context, id []uuid.UUID) (int64, error)
 	FindAllProducts(ctx context.Context, params pkg.FindRequest) ([]model.Product, int64, error)
-	RestoreDeletedProducts(ctx context.Context, ids []uuid.UUID) error
+	RestoreDeletedProducts(ctx context.Context, ids []uuid.UUID) (int64, error)
 }

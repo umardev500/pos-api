@@ -115,9 +115,10 @@ func (p *productRepository) parseFilter(filters *model.ProductFilter, result *go
 	}
 }
 
-func (p *productRepository) SoftDeleteProducts(ctx context.Context, ids []uuid.UUID) error {
+func (p *productRepository) SoftDeleteProducts(ctx context.Context, ids []uuid.UUID) (int64, error) {
 	conn := p.db.GetConn(ctx)
-	return conn.Where("id IN ?", ids).Delete(&model.Product{}).Error
+	result := conn.Where("id IN ?", ids).Delete(&model.Product{})
+	return result.RowsAffected, result.Error
 }
 
 // FindAllProducts retrieves all products with pagination and filtering
@@ -176,7 +177,9 @@ func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.Find
 	return products, count, nil
 }
 
-func (p *productRepository) RestoreDeletedProducts(ctx context.Context, ids []uuid.UUID) error {
+func (p *productRepository) RestoreDeletedProducts(ctx context.Context, ids []uuid.UUID) (int64, error) {
 	conn := p.db.GetConn(ctx)
-	return conn.Unscoped().Model(&model.Product{}).Where("id IN ?", ids).Update("deleted_at", nil).Error
+	result := conn.Unscoped().Model(&model.Product{}).Where("id IN ?", ids).Where("deleted_at IS NOT NULL").Update("deleted_at", nil)
+
+	return result.RowsAffected, result.Error
 }

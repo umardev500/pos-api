@@ -27,7 +27,7 @@ func (p *productService) SoftDeleteProducts(ctx context.Context, req *pkg.IdsMod
 		return pkg.BadRequestResponse(err)
 	}
 
-	err = p.repo.SoftDeleteProducts(ctx, req.IDs)
+	rowsAffected, err := p.repo.SoftDeleteProducts(ctx, req.IDs)
 	if err != nil {
 		return pkg.InternalErrorResponse(err)
 	}
@@ -36,6 +36,7 @@ func (p *productService) SoftDeleteProducts(ctx context.Context, req *pkg.IdsMod
 		StatusCode: fiber.StatusOK,
 		Success:    true,
 		Message:    "Resource deleted successfully",
+		Data:       rowsAffected,
 	}
 }
 
@@ -66,7 +67,7 @@ func (p *productService) RestoreDeletedProducts(ctx context.Context, req *pkg.Id
 		return pkg.BadRequestResponse(err)
 	}
 
-	err = p.repo.RestoreDeletedProducts(ctx, req.IDs)
+	rowsAffected, err := p.repo.RestoreDeletedProducts(ctx, req.IDs)
 	if err != nil {
 		return pkg.InternalErrorResponse(err)
 	}
@@ -75,5 +76,6 @@ func (p *productService) RestoreDeletedProducts(ctx context.Context, req *pkg.Id
 		StatusCode: fiber.StatusOK,
 		Success:    true,
 		Message:    "Resources restored successfully",
+		Data:       rowsAffected,
 	}
 }
