@@ -13,6 +13,7 @@ CREATE TABLE products (
 
 -- Create Index
 CREATE INDEX idx_products_name ON products USING GIN("name" gin_trgm_ops);
+CREATE INDEX idx_product_deleted_at ON products (deleted_at);
 
 -- Seed data with improved unit naming
 INSERT INTO products (id, "name", "description", category_id)
