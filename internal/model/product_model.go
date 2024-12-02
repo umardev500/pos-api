@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/umardev500/pos-api/pkg"
 )
@@ -55,10 +56,10 @@ func (p *ProductPricing) TableName() string {
 
 // ProductStock represents the stock details for a product.
 type ProductStock struct {
-	ID        string `json:"id" gorm:"column:id"`
-	ProductID string `json:"-" gorm:"column:product_id"`
-	Quantity  int    `json:"quantity" gorm:"column:quantity"`
-	pkg.TimeModel
+	ID        string    `json:"id" gorm:"column:id"`
+	ProductID string    `json:"-" gorm:"column:product_id"`
+	Quantity  int       `json:"quantity" gorm:"column:quantity"`
+	CreatedAt time.Time `json:"created_at" gorm:"column:created_at"`
 }
 
 // TableName sets the insert table name for this struct type.

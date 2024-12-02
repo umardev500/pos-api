@@ -1,7 +1,11 @@
 // Package pkg contains common models used across the application.
 package pkg
 
-import "time"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 // Error and Validation Models
 
@@ -75,7 +79,7 @@ type Response struct {
 }
 
 type TimeModel struct {
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt *time.Time `json:"updated_at,omitempty"`
-	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+	CreatedAt time.Time       `json:"created_at"`
+	UpdatedAt *time.Time      `json:"updated_at,omitempty"`
+	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty"`
 }

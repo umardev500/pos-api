@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 	"github.com/umardev500/pos-api/internal/contract"
 	"github.com/umardev500/pos-api/internal/model"
 	"github.com/umardev500/pos-api/pkg"
@@ -18,6 +19,24 @@ func NewProductService(repo contract.ProductRepository, v pkg.Validator) contrac
 	return &productService{
 		repo: repo,
 		v:    v,
+	}
+}
+
+func (p *productService) DeleteProductById(ctx context.Context, id string) pkg.Response {
+	uid, err := uuid.Parse(id)
+	if err != nil {
+		return pkg.BadRequestResponse(err)
+	}
+
+	err = p.repo.DeleteProductById(ctx, uid)
+	if err != nil {
+		return pkg.InternalErrorResponse(err)
+	}
+
+	return pkg.Response{
+		StatusCode: fiber.StatusOK,
+		Success:    true,
+		Message:    "Resource deleted successfully",
 	}
 }
 

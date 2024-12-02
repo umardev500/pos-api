@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/umardev500/pos-api/internal/contract"
 	"github.com/umardev500/pos-api/internal/model"
 	"github.com/umardev500/pos-api/pkg"
@@ -11,9 +12,9 @@ import (
 
 // Constants for SQL queries and column names
 const (
-	joinProductStocks = "JOIN product_stocks ps ON ps.product_id = products.id"
-	joinProductPricings = "JOIN product_pricings pp ON pp.product_id = products.id"
-	joinCategories = "JOIN categories ON categories.id = products.category_id"
+	joinProductStocks      = "JOIN product_stocks ps ON ps.product_id = products.id"
+	joinProductPricings    = "JOIN product_pricings pp ON pp.product_id = products.id"
+	joinCategories         = "JOIN categories ON categories.id = products.category_id"
 	selectDistinctProducts = "products.id, products.name, products.description, products.created_at, products.updated_at, products.deleted_at, categories.name as category_name"
 )
 
@@ -103,6 +104,11 @@ func (p *productRepository) parseFilter(filters *model.ProductFilter, result *go
 			p.queryByMaxPrice(result, *filters.MaxPrice)
 		}
 	}
+}
+
+func (p *productRepository) DeleteProductById(ctx context.Context, id uuid.UUID) error {
+	conn := p.db.GetConn(ctx)
+	return conn.Delete(&model.Product{}, id).Error
 }
 
 // FindAllProducts retrieves all products with pagination and filtering
