@@ -16,13 +16,13 @@ type ProductHandler interface {
 }
 
 type ProductService interface {
-	DeleteProductById(ctx context.Context, id string) pkg.Response
+	SoftDeleteProductById(ctx context.Context, id string) pkg.Response
 	FindAllProducts(ctx context.Context, params pkg.FindRequest) pkg.Response
 	RestoreDeletedProducts(ctx context.Context, req *pkg.IdsModel) pkg.Response
 }
 
 type ProductRepository interface {
-	DeleteProductById(ctx context.Context, id uuid.UUID) error
+	SoftDeleteProductById(ctx context.Context, id uuid.UUID) error
 	FindAllProducts(ctx context.Context, params pkg.FindRequest) ([]model.Product, int64, error)
 	RestoreDeletedProducts(ctx context.Context, ids []uuid.UUID) error
 }

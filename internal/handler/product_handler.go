@@ -23,7 +23,7 @@ func (ph *productHandler) HandleDeleteProductById(c *fiber.Ctx) error {
 	defer cancel()
 
 	id := c.Params("id")
-	resp := ph.service.DeleteProductById(ctx, id)
+	resp := ph.service.SoftDeleteProductById(ctx, id)
 	return c.Status(resp.StatusCode).JSON(resp)
 }
 

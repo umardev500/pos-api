@@ -22,13 +22,13 @@ func NewProductService(repo contract.ProductRepository, v pkg.Validator) contrac
 	}
 }
 
-func (p *productService) DeleteProductById(ctx context.Context, id string) pkg.Response {
+func (p *productService) SoftDeleteProductById(ctx context.Context, id string) pkg.Response {
 	uid, err := uuid.Parse(id)
 	if err != nil {
 		return pkg.BadRequestResponse(err)
 	}
 
-	err = p.repo.DeleteProductById(ctx, uid)
+	err = p.repo.SoftDeleteProductById(ctx, uid)
 	if err != nil {
 		return pkg.InternalErrorResponse(err)
 	}
