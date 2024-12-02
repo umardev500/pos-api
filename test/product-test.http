@@ -33,7 +33,7 @@ GET {{base_url}}/products?min_price=10
 Authorization: Bearer {{accessToken}}
 
 ### Find products with max price filter only
-GET {{base_url}}/products?max_price=10
+GET {{base_url}}/products?max_price=1
 Authorization: Bearer {{accessToken}}
 
 ### Find product with min and max price filter only

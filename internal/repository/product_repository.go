@@ -9,6 +9,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// Constants for SQL queries and column names
+const (
+	joinProductStocks = "JOIN product_stocks ps ON ps.product_id = products.id"
+	joinProductPricings = "JOIN product_pricings pp ON pp.product_id = products.id"
+	joinCategories = "JOIN categories ON categories.id = products.category_id"
+	selectDistinctProducts = "products.id, products.name, products.description, products.created_at, products.updated_at, products.deleted_at, categories.name as category_name"
+)
+
 type productRepository struct {
 	db *pkg.GormDB
 }
@@ -17,46 +25,51 @@ func NewProductRepository(db *pkg.GormDB) contract.ProductRepository {
 	return &productRepository{db: db}
 }
 
+// queryInstock filters products that are in stock
 func (p *productRepository) queryInstock(db *gorm.DB) {
-	db.Joins("JOIN product_stocks ps ON ps.product_id = products.id").
+	db.Joins(joinProductStocks).
 		Where("ps.quantity > ?", 0)
 }
 
+// queryOutstock filters products that are out of stock
 func (p *productRepository) queryOutstock(db *gorm.DB) {
-	db.Joins("JOIN product_stocks ps ON ps.product_id = products.id").
+	db.Joins(joinProductStocks).
 		Where("ps.quantity = ?", 0)
 }
 
+// queryLowstock filters products that have low stock
 func (p *productRepository) queryLowstock(db *gorm.DB) {
-	db.Joins("JOIN product_stocks ps ON ps.product_id = products.id").
+	db.Joins(joinProductStocks).
 		Where("ps.quantity < ps.minimum_quantity")
 }
 
+// queryByCategory filters products by category
 func (p *productRepository) queryByCategory(db *gorm.DB, catName string) {
 	db.Where("categories.name = ?", catName)
 }
 
+// queryWithMinAndMaxPrice filters products by minimum and maximum price
 func (p *productRepository) queryWithMinAndMaxPrice(db *gorm.DB, minPrice float64, maxPrice float64) {
-	db.Joins("JOIN product_pricings pp ON pp.product_id = products.id").
+	db.Joins(joinProductPricings).
 		Where("pp.price >= ? AND pp.price <= ?", minPrice, maxPrice).
-		// Select distinct to prevent duplicate results
-		Distinct("products.id", "products.name", "products.description", "products.created_at", "products.updated_at", "products.deleted_at", "categories.name as category_name")
+		Distinct(selectDistinctProducts)
 }
 
+// queryByMinPrice filters products by minimum price
 func (p *productRepository) queryByMinPrice(db *gorm.DB, minPrice float64) {
-	db.Joins("JOIN product_pricings pp ON pp.product_id = products.id").
+	db.Joins(joinProductPricings).
 		Where("pp.price >= ?", minPrice).
-		// Select distinct to prevent duplicate results
-		Distinct("products.id", "products.name", "products.description", "products.created_at", "products.updated_at", "products.deleted_at", "categories.name as category_name")
+		Distinct(selectDistinctProducts)
 }
 
+// queryByMaxPrice filters products by maximum price
 func (p *productRepository) queryByMaxPrice(db *gorm.DB, maxPrice float64) {
-	db.Joins("JOIN product_pricings pp ON pp.product_id = products.id").
+	db.Joins(joinProductPricings).
 		Where("pp.price <= ?", maxPrice).
-		// Select distinct to prevent duplicate results
-		Distinct("products.id", "products.name", "products.description", "products.created_at", "products.updated_at", "products.deleted_at", "categories.name as category_name")
+		Distinct(selectDistinctProducts)
 }
 
+// parseFilter applies filters to the query
 func (p *productRepository) parseFilter(filters *model.ProductFilter, result *gorm.DB) {
 	// Filter by status
 	if filters.Status != nil {
@@ -80,7 +93,6 @@ func (p *productRepository) parseFilter(filters *model.ProductFilter, result *go
 	if isMinAndMaxPriceSet {
 		p.queryWithMinAndMaxPrice(result, *filters.MinPrice, *filters.MaxPrice)
 	} else {
-
 		// Filter by min price
 		if filters.MinPrice != nil && *filters.MinPrice > 0 {
 			p.queryByMinPrice(result, *filters.MinPrice)
@@ -93,6 +105,7 @@ func (p *productRepository) parseFilter(filters *model.ProductFilter, result *go
 	}
 }
 
+// FindAllProducts retrieves all products with pagination and filtering
 func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.FindRequest) ([]model.Product, int64, error) {
 	pagination := params.Pagination
 	conn := p.db.GetConn(ctx)
@@ -107,10 +120,9 @@ func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.Find
 		Preload("Stock")
 
 	// Join with categories table
-	result.Joins("JOIN categories ON categories.id = products.category_id")
+	result.Joins(joinCategories)
 
 	// Select specific columns
-	// this will replaced if we use select distinct
 	result.Select("products.id", "products.name", "products.description", "products.category_id", "products.created_at", "products.updated_at", "products.deleted_at", "categories.name as category_name")
 
 	// Apply search filter if provided
@@ -118,7 +130,7 @@ func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.Find
 		result = result.Where("products.name ILIKE ?", "%"+*params.Search+"%")
 	}
 
-	// Apply status filter if provided
+	// Apply filters
 	filters := params.Filters.(*model.ProductFilter)
 	p.parseFilter(filters, result)
 
@@ -132,7 +144,7 @@ func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.Find
 	countQuery := conn.Model(&model.Product{})
 
 	// Join with categories table in the count query as well
-	countQuery.Joins("JOIN categories ON categories.id = products.category_id")
+	countQuery.Joins(joinCategories)
 
 	// Apply the same filters to the count query
 	if params.Search != nil && *params.Search != "" {
