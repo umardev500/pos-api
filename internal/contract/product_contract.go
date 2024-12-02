@@ -10,19 +10,19 @@ import (
 )
 
 type ProductHandler interface {
-	HandleDeleteProductById(ctx *fiber.Ctx) error
+	HandleDeleteProducts(ctx *fiber.Ctx) error
 	HandleGetAllProducts(ctx *fiber.Ctx) error
 	HandleRestoreDeletedProducts(ctx *fiber.Ctx) error
 }
 
 type ProductService interface {
-	SoftDeleteProductById(ctx context.Context, id string) pkg.Response
+	SoftDeleteProducts(ctx context.Context, req *pkg.IdsModel) pkg.Response
 	FindAllProducts(ctx context.Context, params pkg.FindRequest) pkg.Response
 	RestoreDeletedProducts(ctx context.Context, req *pkg.IdsModel) pkg.Response
 }
 
 type ProductRepository interface {
-	SoftDeleteProductById(ctx context.Context, id uuid.UUID) error
+	SoftDeleteProducts(ctx context.Context, id []uuid.UUID) error
 	FindAllProducts(ctx context.Context, params pkg.FindRequest) ([]model.Product, int64, error)
 	RestoreDeletedProducts(ctx context.Context, ids []uuid.UUID) error
 }

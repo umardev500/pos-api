@@ -18,12 +18,16 @@ func NewProductHandler(service contract.ProductService) contract.ProductHandler 
 	return &productHandler{service: service}
 }
 
-func (ph *productHandler) HandleDeleteProductById(c *fiber.Ctx) error {
+func (ph *productHandler) HandleDeleteProducts(c *fiber.Ctx) error {
+	var payload pkg.IdsModel
+	if err := c.BodyParser(&payload); err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	id := c.Params("id")
-	resp := ph.service.SoftDeleteProductById(ctx, id)
+	resp := ph.service.SoftDeleteProducts(ctx, &payload)
 	return c.Status(resp.StatusCode).JSON(resp)
 }
 

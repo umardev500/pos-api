@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/umardev500/pos-api/internal/contract"
 	"github.com/umardev500/pos-api/internal/model"
 	"github.com/umardev500/pos-api/pkg"
@@ -22,13 +21,13 @@ func NewProductService(repo contract.ProductRepository, v pkg.Validator) contrac
 	}
 }
 
-func (p *productService) SoftDeleteProductById(ctx context.Context, id string) pkg.Response {
-	uid, err := uuid.Parse(id)
+func (p *productService) SoftDeleteProducts(ctx context.Context, req *pkg.IdsModel) pkg.Response {
+	err := req.Validate()
 	if err != nil {
 		return pkg.BadRequestResponse(err)
 	}
 
-	err = p.repo.SoftDeleteProductById(ctx, uid)
+	err = p.repo.SoftDeleteProducts(ctx, req.IDs)
 	if err != nil {
 		return pkg.InternalErrorResponse(err)
 	}

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS stock_adjustments (
     reversed BOOLEAN NOT NULL DEFAULT FALSE,
     reversal_of UUID NULL, -- Link to the reversal adjustment
     created_by UUID NOT NULL, -- User who created the adjustment
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
     FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
     FOREIGN KEY (supplier_id) REFERENCES suppliers (id) ON DELETE CASCADE,

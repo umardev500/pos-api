@@ -27,7 +27,7 @@ func (c *productContainer) HandleApi(router fiber.Router) {
 	product := router.Group("/products")
 	product.Use(pkg.CheckAuth())
 	product.Get("/", c.hndlr.HandleGetAllProducts)
-	product.Delete("/:id", c.hndlr.HandleDeleteProductById)
+	product.Delete("/", c.hndlr.HandleDeleteProducts)
 	product.Post("/restore", c.hndlr.HandleRestoreDeletedProducts)
 }
 

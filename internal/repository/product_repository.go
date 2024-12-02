@@ -115,9 +115,9 @@ func (p *productRepository) parseFilter(filters *model.ProductFilter, result *go
 	}
 }
 
-func (p *productRepository) SoftDeleteProductById(ctx context.Context, id uuid.UUID) error {
+func (p *productRepository) SoftDeleteProducts(ctx context.Context, ids []uuid.UUID) error {
 	conn := p.db.GetConn(ctx)
-	return conn.Delete(&model.Product{}, id).Error
+	return conn.Where("id IN ?", ids).Delete(&model.Product{}).Error
 }
 
 // FindAllProducts retrieves all products with pagination and filtering
