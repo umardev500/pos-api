@@ -44,6 +44,10 @@ func (p *productRepository) queryLowstock(db *gorm.DB) {
 		Where("ps.quantity < ps.minimum_quantity")
 }
 
+func (p *productRepository) queryDeleted(db *gorm.DB) {
+	db.Unscoped().Where("products.deleted_at IS NOT NULL")
+}
+
 // queryByCategory filters products by category
 func (p *productRepository) queryByCategory(db *gorm.DB, catName string) {
 	db.Where("categories.name = ?", catName)
@@ -72,6 +76,11 @@ func (p *productRepository) queryByMaxPrice(db *gorm.DB, maxPrice float64) {
 
 // parseFilter applies filters to the query
 func (p *productRepository) parseFilter(filters *model.ProductFilter, result *gorm.DB) {
+	// Filter by archived status
+	if filters.Archived {
+		p.queryDeleted(result)
+	}
+
 	// Filter by status
 	if filters.Status != nil {
 		switch *filters.Status {

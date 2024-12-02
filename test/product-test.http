@@ -24,6 +24,10 @@ Authorization: Bearer {{accessToken}}
 GET {{base_url}}/products?status=in_stock
 Authorization: Bearer {{accessToken}}
 
+### Find products with archived filter only
+GET {{base_url}}/products?archived=true
+Authorization: Bearer {{accessToken}}
+
 ### Find products with category filter only
 GET {{base_url}}/products?category=Fruits
 Authorization: Bearer {{accessToken}}
