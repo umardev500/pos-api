@@ -58,3 +58,16 @@ func (ph *productHandler) HandleGetAllProducts(c *fiber.Ctx) error {
 	resp := ph.service.FindAllProducts(ctx, params)
 	return c.Status(resp.StatusCode).JSON(resp)
 }
+
+func (ph *productHandler) HandleRestoreDeletedProducts(c *fiber.Ctx) error {
+	var payload pkg.IdsModel
+	if err := c.BodyParser(&payload); err != nil {
+		return c.SendStatus(fiber.StatusBadRequest)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	resp := ph.service.RestoreDeletedProducts(ctx, &payload)
+	return c.Status(resp.StatusCode).JSON(resp)
+}

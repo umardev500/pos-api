@@ -4,6 +4,7 @@ package pkg
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -82,4 +83,12 @@ type TimeModel struct {
 	CreatedAt time.Time       `json:"created_at"`
 	UpdatedAt *time.Time      `json:"updated_at,omitempty"`
 	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty"`
+}
+
+type IdsModel struct {
+	IDs []uuid.UUID `json:"ids"`
+}
+
+func (i *IdsModel) Validate() error {
+	return nil
 }

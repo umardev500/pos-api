@@ -60,3 +60,21 @@ func (p *productService) FindAllProducts(ctx context.Context, params pkg.FindReq
 		Pagination: pkg.ParsePaginationInfo(total, params),
 	}
 }
+
+func (p *productService) RestoreDeletedProducts(ctx context.Context, req *pkg.IdsModel) pkg.Response {
+	err := req.Validate()
+	if err != nil {
+		return pkg.BadRequestResponse(err)
+	}
+
+	err = p.repo.RestoreDeletedProducts(ctx, req.IDs)
+	if err != nil {
+		return pkg.InternalErrorResponse(err)
+	}
+
+	return pkg.Response{
+		StatusCode: fiber.StatusOK,
+		Success:    true,
+		Message:    "Resources restored successfully",
+	}
+}

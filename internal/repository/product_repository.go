@@ -175,3 +175,8 @@ func (p *productRepository) FindAllProducts(ctx context.Context, params pkg.Find
 
 	return products, count, nil
 }
+
+func (p *productRepository) RestoreDeletedProducts(ctx context.Context, ids []uuid.UUID) error {
+	conn := p.db.GetConn(ctx)
+	return conn.Unscoped().Model(&model.Product{}).Where("id IN ?", ids).Update("deleted_at", nil).Error
+}
