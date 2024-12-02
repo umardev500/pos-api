@@ -39,6 +39,9 @@ func (v *validatorStruct) Struct(obj interface{}) (fields []ValidationErrorMeta,
 		}
 
 		validationField := v.GetDetail(fieldErr, field)
+		if validationField == nil {
+			continue
+		}
 
 		fields = append(fields, *validationField)
 	}
@@ -50,7 +53,7 @@ func (v *validatorStruct) GetDetail(fieldErr validator.FieldError, field reflect
 	code := fieldErr.Tag()
 	path, ok := field.Tag.Lookup("name")
 	if !ok {
-		return nil
+		path = field.Name
 	}
 	fieldType := field.Type.Kind().String()
 
