@@ -24,34 +24,10 @@ func NewProductService(repo contract.ProductRepository, v pkg.Validator) contrac
 	}
 }
 
-// SoftDeleteProducts soft deletes the products with the given IDs.
-func (p *productService) SoftDeleteProducts(ctx context.Context, req *pkg.IdsModel) pkg.Response {
-	// Validate the request
-	if err := req.Validate(); err != nil {
-		return pkg.BadRequestResponse(err)
-	}
-
-	// Soft delete products from the repository
-	rowsAffected, err := p.repo.SoftDeleteProducts(ctx, req.IDs)
-	if err != nil {
-		// Return internal error response if repository operation fails
-		return pkg.InternalErrorResponse(err)
-	}
-
-	// Return successful response with rows affected
-	return pkg.Response{
-		StatusCode: fiber.StatusOK,
-		Success:    true,
-		Message:    "Resource deleted successfully",
-		Data:       rowsAffected,
-	}
-}
-
 // FindAllProducts retrieves all products based on the provided filters.
 func (p *productService) FindAllProducts(ctx context.Context, params pkg.FindRequest) pkg.Response {
 	// Extract product filters from the request
 	filters := params.Filters.(*model.ProductFilter)
-
 	// Validate the filters
 	if err := filters.Validate(); err != nil {
 		return pkg.BadRequestResponse(err)
@@ -93,6 +69,29 @@ func (p *productService) RestoreDeletedProducts(ctx context.Context, req *pkg.Id
 		StatusCode: fiber.StatusOK,
 		Success:    true,
 		Message:    "Resources restored successfully",
+		Data:       rowsAffected,
+	}
+}
+
+// SoftDeleteProducts soft deletes the products with the given IDs.
+func (p *productService) SoftDeleteProducts(ctx context.Context, req *pkg.IdsModel) pkg.Response {
+	// Validate the request
+	if err := req.Validate(); err != nil {
+		return pkg.BadRequestResponse(err)
+	}
+
+	// Soft delete products from the repository
+	rowsAffected, err := p.repo.SoftDeleteProducts(ctx, req.IDs)
+	if err != nil {
+		// Return internal error response if repository operation fails
+		return pkg.InternalErrorResponse(err)
+	}
+
+	// Return successful response with rows affected
+	return pkg.Response{
+		StatusCode: fiber.StatusOK,
+		Success:    true,
+		Message:    "Resource deleted successfully",
 		Data:       rowsAffected,
 	}
 }
